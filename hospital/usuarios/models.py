@@ -1,15 +1,16 @@
 from djongo import models
 
-class Usuario(models.Model):
-    nombre = models.CharField(max_length=200)
-    fecha_nacimiento = models.DateField()
-    edad = models.IntegerField()
-    
+class Rol(models.Model):
+    nombre = models.CharField(max_length=50)
+    descripcion = models.CharField(max_length=200)
+
     class Meta:
         abstract = True
-    
-class Rol(models.Model):
-    nombre: models.CharField(max_length=200)
-    
-    # Modelo embebido: permite almacenar los datos del modelo
-    usuario: models.EmbeddedField(model_container=Usuario)
+
+class Usuario(models.Model):
+    nombre = models.CharField(max_length=200)
+    email = models.EmailField(unique=True)
+    usuario = models.CharField(max_length=50, unique=True)
+    password = models.CharField(max_length=128)
+    telefono = models.CharField(max_length=15, blank=True)
+    rol = models.EmbeddedField(model_container=Rol)
