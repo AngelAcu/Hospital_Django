@@ -29,4 +29,15 @@ def delete(request):
     data.delete()
     
     return render(request, 'delete.html', {'medicamento': data})
-   
+
+def update(request):
+    data = Medicamento.objects.get(codigo='MED006')
+    
+    data.precio = 2500
+    data.stock = 15
+    data.nombre = "clonazepaam"
+    data.descripcion = "medicamento actualizado"
+    
+    data.save()
+    
+    return render(request, 'update.html', {'medicamento': data})
