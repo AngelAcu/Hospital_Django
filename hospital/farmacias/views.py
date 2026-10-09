@@ -7,7 +7,7 @@ from .models import Medicamento
 def inicio(request):
     return HttpResponse("<h1>Hola mundo</h1> <br> <p>Hola mundo</p>")
 
-def goIndex(request):
+def create(request):
     data = Medicamento.objects.create(
         nombre="Acetaminofén",
         descripcion="Medicamento para aliviar el dolor y la fiebre",
@@ -17,5 +17,10 @@ def goIndex(request):
         codigo="MED006"
     )
     
-    ## data = { 'usuario': { 'id': 1, 'nombre': 'Angel' } }
-    return render(request, 'index.html', {'medicamento': data})
+    return render(request, 'create.html', {'medicamento': data})
+
+def find(request):
+    data = Medicamento.objects.all()
+    
+    return render(request, 'find.html', {'medicamentos': data})
+    

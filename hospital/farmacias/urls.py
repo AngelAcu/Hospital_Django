@@ -1,7 +1,8 @@
 from django.urls import path
-from .views import inicio, goIndex
+from .views import inicio, create, find
 
 urlpatterns = [
     path('home/', inicio, name='inicio'),
-    path('index/', goIndex, name='index')
+    path('create/', create, name='create'),
+    path('find/', find, name='find')
 ]
