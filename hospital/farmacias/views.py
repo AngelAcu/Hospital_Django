@@ -23,4 +23,10 @@ def find(request):
     data = Medicamento.objects.all()
     
     return render(request, 'find.html', {'medicamentos': data})
+
+def delete(request):
+    data = Medicamento.objects.get(codigo='MED006')
+    data.delete()
     
+    return render(request, 'delete.html', {'medicamento': data})
+   

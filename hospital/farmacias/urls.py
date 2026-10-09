@@ -1,8 +1,9 @@
 from django.urls import path
-from .views import inicio, create, find
+from .views import inicio, create, find, delete
 
 urlpatterns = [
     path('home/', inicio, name='inicio'),
     path('create/', create, name='create'),
-    path('find/', find, name='find')
+    path('find/', find, name='find'),
+    path('delete/', delete, name='delete')
 ]
