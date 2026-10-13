@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Listado de Historias Clínicas</title>
+</head>
+<body>
+    <h1>Historias Clínicas</h1>
+    <table border="1" cellpadding="6">
+        <tr>
+            <th>ID</th>
+            <th>Documento</th>
+            <th>Nombre</th>
+            <th>Fecha Nacimiento</th>
+            <th>Teléfono</th>
+            <th>Fecha Creación</th>
+            <th>Antecedentes</th>
+            <th>Alergias</th>
+            <th>Observaciones</th>
+        </tr>
+        {% for h in historias %}
+        <tr>
+            <td>{{ h.id }}</td>
+            <td>{{ h.paciente.documento }}</td>
+            <td>{{ h.paciente.nombre }}</td>
+            <td>{{ h.paciente.fecha_nacimiento }}</td>
+            <td>{{ h.paciente.telefono }}</td>
+            <td>{{ h.fecha_creacion }}</td>
+            <td>{{ h.antecedentes }}</td>
+            <td>{{ h.alergias }}</td>
+            <td>{{ h.observaciones }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <a href="/historias/">Volver al inicio</a>
+</body>
+</html>

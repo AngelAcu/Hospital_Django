@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Actualizar Historia Clínica</title>
+</head>
+<body>
+    <h1>Historia Clínica Actualizada</h1>
+    <p><b>ID:</b> {{ historia.id }}</p>
+    <p><b>Documento:</b> {{ historia.paciente.documento }}</p>
+    <p><b>Nombre:</b> {{ historia.paciente.nombre }}</p>
+    <p><b>Fecha Nacimiento:</b> {{ historia.paciente.fecha_nacimiento }}</p>
+    <p><b>Teléfono:</b> {{ historia.paciente.telefono }}</p>
+    <p><b>Antecedentes:</b> {{ historia.antecedentes }}</p>
+    <p><b>Alergias:</b> {{ historia.alergias }}</p>
+    <p><b>Observaciones:</b> {{ historia.observaciones }}</p>
+
+    <a href="/historias/find/">Ver todas</a>
+</body>
+</html>

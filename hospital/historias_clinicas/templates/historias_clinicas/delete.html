@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Historia Clínica Eliminada</title>
+</head>
+<body>
+    <h1>Historia Clínica Eliminada</h1>
+    <p><b>ID:</b> {{ historia.id }}</p>
+    <p><b>Documento:</b> {{ historia.paciente.documento }}</p>
+    <p><b>Nombre:</b> {{ historia.paciente.nombre }}</p>
+    <p><b>Fecha Nacimiento:</b> {{ historia.paciente.fecha_nacimiento }}</p>
+    <p><b>Teléfono:</b> {{ historia.paciente.telefono }}</p>
+
+    <a href="/historias/find/">Ver todas</a>
+</body>
+</html>
