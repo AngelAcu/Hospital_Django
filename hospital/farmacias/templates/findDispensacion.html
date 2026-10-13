@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pagina de inicio</title>
+</head>
+<body>
+    <h4>Dispensaciones</h4>
+    {% for dispensacion in dispensaciones %}
+    <p>{{dispensacion.observacion}}</p>
+    <p>{{dispensacion.cantidad}}</p>
+    <br>
+    {% endfor %}
+</body>
+</html>
