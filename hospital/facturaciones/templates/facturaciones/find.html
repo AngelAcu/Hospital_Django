@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Listado de Facturas</title>
+</head>
+<body>
+    <h1>Listado de Facturas</h1>
+    <table border="1" cellpadding="6">
+        <tr>
+            <th>ID</th>
+            <th>Código</th>
+            <th>Fecha</th>
+            <th>Paciente</th>
+            <th>Documento</th>
+            <th>Total</th>
+            <th>Estado</th>
+            <th>Conceptos</th>
+            <th>Observaciones</th>
+        </tr>
+        {% for f in facturas %}
+        <tr>
+            <td>{{ f.id }}</td>
+            <td>{{ f.codigo }}</td>
+            <td>{{ f.fecha }}</td>
+            <td>{{ f.paciente.nombre }}</td>
+            <td>{{ f.paciente.documento }}</td>
+            <td>{{ f.total }}</td>
+            <td>{{ f.estado }}</td>
+            <td>
+                {% for c in f.conceptos %}
+                    {{ c.descripcion }} (${{ c.valor }}){% if not forloop.last %}, {% endif %}
+                {% endfor %}
+            </td>
+            <td>{{ f.observaciones }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>
