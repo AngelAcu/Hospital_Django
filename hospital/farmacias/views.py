@@ -3,9 +3,38 @@ from django.shortcuts import render
 
 from .models import Medicamento, Dispensacion
 
-# Create your views here.
 def inicio(request):
     return HttpResponse("<h1>Hola mundo</h1> <br> <p>Hola mundo</p>")
+
+def goParams(request, id):
+    return HttpResponse(f"<h1>El id ingresado es {id}</h1>")
+
+def goIndex(request, decision):
+    data = {
+        "id": "1",
+        "nombre": "Juan",
+        "esAdministrador": decision
+    }
+    
+    data_ciclos = [
+        {
+            "id": "1020",
+            "nombre": "naproxeno",
+            "costo": 45000
+        }, 
+        {
+            "id": "1060",
+            "nombre": "amoxicilina",
+            "costo": 95000
+        },
+        {
+            "id": "1905",
+            "nombre": "advil",
+            "costo": 8700
+        }
+    ]
+    
+    return render(request, 'index.html', {"usuario": data, "medicamentos": data_ciclos})
 
 def create(request):
     data = Medicamento.objects.create(

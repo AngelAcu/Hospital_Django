@@ -1,8 +1,10 @@
 from django.urls import path
-from .views import inicio, create, find, delete, update, createDispensacion, findDispensacion, deleteDispensacion, updateDispensacion
+from .views import goIndex, goParams, inicio, create, find, delete, update, createDispensacion, findDispensacion, deleteDispensacion, updateDispensacion
 
 urlpatterns = [
     path('home/', inicio, name='inicio'),
+    path('parametros/<int:id>/', goParams, name='params'),
+    path('index/<int:decision>/', goIndex, name='index'),
     path('create/', create, name='create'),
     path('find/', find, name='find'),
     path('delete/', delete, name='delete'),
