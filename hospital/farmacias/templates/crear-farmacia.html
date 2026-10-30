@@ -1,0 +1,47 @@
+<!-- <form action="/farmacias/home/"> -->
+<form method="POST" action="{% url 'farmacias:inicio' %}">
+    {% csrf_token %}
+    <div>
+        <label>Nombre</label>
+        <br>
+        {{formulario.nombre}}
+    </div>
+
+    <br>
+
+    <div>
+        <label>Descripcion</label>
+        <br>
+        {{formulario.descripcion}}
+    </div>
+
+    <br>
+
+    <div>
+        <label>Precio</label>
+        <br>
+        {{formulario.precio}}
+    </div>
+
+    <br>
+
+    <div>
+        <label>Stock</label>
+        <br>
+        {{formulario.stock}}
+    </div>
+
+    <br>
+
+    <div>
+        <label>Codigo</label>
+        <br>
+        {{formulario.codigo}}
+    </div>
+
+    <br>
+
+    <button>
+        Guardar
+    </button>
+</form>

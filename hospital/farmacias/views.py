@@ -1,7 +1,7 @@
 from django.http import HttpResponse
-from django.shortcuts import render
-
+from django.shortcuts import render, redirect
 from .models import Medicamento, Dispensacion
+from .forms import FormularioFarmacias
 
 def inicio(request):
     return HttpResponse("<h1>Hola mundo</h1> <br> <p>Hola mundo</p>")
@@ -122,3 +122,17 @@ def updateDispensacion(request):
     data.save()
 
     return render(request, 'updateDispensacion.html', {'dispensacion': data})
+
+def createFarmacia(request):
+    if request.method == 'GET':
+        if 'nombre' in request.GET:
+            nombre = request.GET['nombre']
+            
+        return render(request, 'crear-farmacia.html', {'formulario': FormularioFarmacias})
+    
+    else:
+        if 'nombre' in request.POST:
+            nombre = request.POST['nombre']
+            print(f"Se esta guardando el usuario {nombre}")
+    
+        ##return redirect('inicio')

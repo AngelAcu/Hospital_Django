@@ -1,5 +1,7 @@
 from django.urls import path
-from .views import goIndex, goParams, inicio, create, find, delete, update, createDispensacion, findDispensacion, deleteDispensacion, updateDispensacion
+from .views import createFarmacia, goIndex, goParams, inicio, create, find, delete, update, createDispensacion, findDispensacion, deleteDispensacion, updateDispensacion
+
+app_name = 'farmacias'
 
 urlpatterns = [
     path('home/', inicio, name='inicio'),
@@ -12,5 +14,6 @@ urlpatterns = [
     path('createDispensacion/', createDispensacion, name='createDispensacion'),
     path('findDispensacion/', findDispensacion, name='findDispensacion'),
     path('deleteDispensacion/', deleteDispensacion, name='deleteDispensacion'),
-    path('updateDispensacion/', updateDispensacion, name='updateDispensacion')
+    path('updateDispensacion/', updateDispensacion, name='updateDispensacion'),
+    path('formulario/', createFarmacia, name='create-farmacia')
 ]
