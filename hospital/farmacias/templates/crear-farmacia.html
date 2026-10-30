@@ -1,8 +1,12 @@
+{% load static %}
+
+<link rel="stylesheet" href="{% static 'styles.css' %}">
+
 <!-- <form action="/farmacias/home/"> -->
 <form method="POST" action="{% url 'farmacias:inicio' %}">
     {% csrf_token %}
     <div>
-        <label>Nombre</label>
+        <label class="prueba">Nombre</label>
         <br>
         {{formulario.nombre}}
     </div>
