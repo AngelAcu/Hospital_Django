@@ -1,0 +1,145 @@
+/* Estilos generales del sistema hospitalario (los usa templates/base.html). */
+
+:root {
+    --azul: #2c5f7c;
+    --azul-oscuro: #1f4a62;
+    --azul-suave: #e8f0f5;
+    --fondo: #f4f6f8;
+    --blanco: #ffffff;
+    --borde: #d3dce3;
+    --texto: #2b3a45;
+    --texto-suave: #5f6f7b;
+    --verde: #2f7d5b;
+    --verde-suave: #e7f3ed;
+    --ambar: #8a6a1f;
+    --ambar-suave: #fbf4e2;
+    --rojo: #a33a3a;
+    --rojo-suave: #f8eaea;
+}
+
+* { box-sizing: border-box; border-radius: 0; }
+
+body {
+    margin: 0;
+    background: var(--fondo);
+    color: var(--texto);
+    font-family: "Source Sans 3", "Segoe UI", Arial, sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+/* Encabezado institucional */
+.franja { height: 4px; background: var(--azul-oscuro); }
+.encabezado { background: var(--blanco); border-bottom: 1px solid var(--borde); }
+.encabezado-contenido {
+    max-width: 1100px; margin: 0 auto; padding: 14px 24px;
+    display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px;
+}
+.marca { display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--azul-oscuro); }
+.marca-icono { width: 36px; height: 36px; background: var(--azul); display: grid; place-items: center; }
+.marca-nombre { font-size: 20px; font-weight: 700; letter-spacing: .2px; line-height: 1.1; }
+.marca-sub { font-size: 13px; color: var(--texto-suave); font-weight: 400; }
+.nav a {
+    color: var(--azul); text-decoration: none; font-weight: 600;
+    padding: 8px 14px; border: 1px solid transparent;
+}
+.nav a:hover, .nav a:focus-visible { border-color: var(--borde); background: var(--azul-suave); outline: none; }
+
+.nav { margin-left: auto; }
+.sesion { display: flex; align-items: center; gap: 12px; font-size: 14px; color: var(--texto-suave); }
+.sesion span { color: var(--texto); font-weight: 600; }
+.sesion small { color: var(--texto-suave); font-weight: 400; }
+.sesion .boton { padding: 6px 12px; }
+.acceso { max-width: 420px; margin: 24px auto 0; }
+
+/* Contenido */
+main { max-width: 1100px; margin: 0 auto; padding: 28px 24px 48px; }
+.migas { font-size: 14px; color: var(--texto-suave); margin-bottom: 8px; }
+h1 { font-size: 26px; font-weight: 700; color: var(--azul-oscuro); margin: 0 0 20px; }
+
+.panel { background: var(--blanco); border: 1px solid var(--borde); }
+.panel-titulo {
+    margin: 0; padding: 12px 20px; font-size: 15px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: .6px;
+    color: var(--azul-oscuro); background: var(--azul-suave); border-bottom: 1px solid var(--borde);
+}
+.panel-cuerpo { padding: 20px; }
+
+/* Tabla */
+.tabla-contenedor { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 15px; }
+th, td { text-align: left; padding: 12px 20px; border-bottom: 1px solid var(--borde); white-space: nowrap; }
+th { font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: .5px; color: var(--texto-suave); background: #fafbfc; }
+tbody tr:hover { background: #f7fafc; }
+tbody tr:last-child td { border-bottom: none; }
+.vacio { text-align: center; color: var(--texto-suave); padding: 32px 20px; }
+.apagado { color: var(--texto-suave); font-style: italic; }
+
+/* Etiqueta de rol */
+.rol { display: inline-block; padding: 2px 10px; font-size: 13px; font-weight: 600; border: 1px solid var(--borde); background: var(--azul-suave); color: var(--azul-oscuro); }
+
+/* Alergias: dato clínico que debe saltar a la vista */
+.alerta-clinica { display: inline-block; padding: 2px 10px; font-size: 13px; font-weight: 600; border: 1px solid var(--rojo); background: var(--rojo-suave); color: var(--rojo); white-space: normal; }
+
+/* Avisos de resultado */
+.aviso { display: flex; gap: 12px; align-items: flex-start; padding: 14px 20px; border: 1px solid; border-left-width: 5px; margin-bottom: 20px; }
+.aviso strong { display: block; }
+.aviso-exito { background: var(--verde-suave); border-color: var(--verde); color: var(--verde); }
+.aviso-info { background: var(--ambar-suave); border-color: var(--ambar); color: var(--ambar); }
+.aviso-peligro { background: var(--rojo-suave); border-color: var(--rojo); color: var(--rojo); }
+.aviso p { margin: 2px 0 0; color: var(--texto); }
+
+/* Ficha de datos */
+.ficha { display: grid; grid-template-columns: 180px 1fr; margin: 0; }
+.ficha dt, .ficha dd { margin: 0; padding: 10px 0; border-bottom: 1px solid var(--borde); }
+.ficha dt { font-weight: 600; color: var(--texto-suave); }
+.ficha dt:last-of-type, .ficha dd:last-of-type { border-bottom: none; }
+
+.acciones { margin-top: 20px; }
+.acciones:first-child { margin-top: 0; }
+.boton {
+    display: inline-block; padding: 10px 18px; font-weight: 600; text-decoration: none;
+    background: var(--azul); color: var(--blanco); border: 1px solid var(--azul);
+}
+.boton:hover, .boton:focus-visible { background: var(--azul-oscuro); outline: 2px solid var(--azul-suave); }
+
+.boton-secundario { background: var(--blanco); color: var(--azul); border-color: var(--borde); }
+.boton-secundario:hover, .boton-secundario:focus-visible { background: var(--azul-suave); }
+.boton-peligro { background: var(--rojo); border-color: var(--rojo); }
+.boton-peligro:hover, .boton-peligro:focus-visible { background: #852f2f; }
+button.boton { font: inherit; cursor: pointer; }
+.acciones { display: flex; flex-wrap: wrap; gap: 10px; }
+.cabecera { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 20px; }
+.cabecera h1 { margin: 0; }
+
+/* Acciones en la tabla */
+.enlace { color: var(--azul); font-weight: 600; text-decoration: none; margin-right: 14px; }
+.enlace:hover, .enlace:focus-visible { text-decoration: underline; }
+.enlace-peligro { color: var(--rojo); }
+
+/* Formulario */
+.campos { display: grid; grid-template-columns: 1fr 1fr; gap: 18px 24px; }
+.campo label { display: block; font-weight: 600; margin-bottom: 6px; }
+.campo .ayuda { font-size: 13px; color: var(--texto-suave); margin-top: 4px; }
+.campo-ancho { grid-column: 1 / -1; }
+.campo textarea { min-height: 96px; resize: vertical; }
+.campo input, .campo select, .campo textarea {
+    width: 100%; padding: 10px 12px; font: inherit; color: var(--texto);
+    background: var(--blanco); border: 1px solid #b9c6cf;
+}
+.campo input:focus, .campo select:focus, .campo textarea:focus { outline: 2px solid var(--azul-suave); border-color: var(--azul); }
+.campo.con-error input, .campo.con-error select, .campo.con-error textarea { border-color: var(--rojo); background: #fffafa; }
+.error { color: var(--rojo); font-size: 14px; margin: 4px 0 0; }
+.obligatorio { color: var(--rojo); }
+
+footer { text-align: center; font-size: 13px; color: var(--texto-suave); padding: 0 24px 24px; }
+
+@media (max-width: 600px) {
+    .encabezado-contenido, main { padding-left: 16px; padding-right: 16px; }
+    .marca-sub { display: none; }
+    .ficha, .campos { grid-template-columns: 1fr; }
+    .ficha dt { padding-bottom: 0; border-bottom: none; }
+    th, td { padding: 10px 14px; }
+}
+
+.separado { margin-top: 20px; }

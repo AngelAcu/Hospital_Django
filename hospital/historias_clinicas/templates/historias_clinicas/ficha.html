@@ -1,0 +1,19 @@
+<section class="panel">
+    <h2 class="panel-titulo">Historia clínica N.º {{ historia.id }}</h2>
+    <div class="panel-cuerpo">
+        <dl class="ficha">
+            <dt>Documento</dt><dd>{{ historia.paciente.documento }}</dd>
+            <dt>Paciente</dt><dd>{{ historia.paciente.nombre }}</dd>
+            <dt>Fecha de nacimiento</dt><dd>{{ historia.paciente.fecha_nacimiento|date:"d/m/Y" }}</dd>
+            <dt>Teléfono</dt><dd>{{ historia.paciente.telefono|default:"—" }}</dd>
+            <dt>Apertura</dt><dd>{{ historia.fecha_creacion|date:"d/m/Y H:i" }}</dd>
+            <dt>Alergias</dt><dd>{% if historia.alergias %}<span class="alerta-clinica">{{ historia.alergias }}</span>{% else %}<span class="apagado">Ninguna registrada</span>{% endif %}</dd>
+            <dt>Antecedentes</dt><dd>{{ historia.antecedentes|default:"—"|linebreaksbr }}</dd>
+            <dt>Observaciones</dt><dd>{{ historia.observaciones|default:"—"|linebreaksbr }}</dd>
+        </dl>
+        <div class="acciones">
+            <a class="boton" href="{% url 'find_historia' %}">Ver listado de historias</a>
+            <a class="boton boton-secundario" href="{% url 'update_historia' historia.id %}">Editar</a>
+        </div>
+    </div>
+</section>

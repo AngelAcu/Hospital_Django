@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ titulo }}{% endblock %}
+{% block migas %} / Historias clínicas / {{ titulo }}{% endblock %}
+
+{% block content %}
+    <h1>{{ titulo }}</h1>
+
+    {% if errores %}
+        <div class="aviso aviso-peligro" role="alert">
+            <div>
+                <strong>No se pudo guardar la historia clínica</strong>
+                {% for mensaje in errores.general %}<p>{{ mensaje }}</p>{% empty %}<p>Corrige los campos marcados en rojo.</p>{% endfor %}
+            </div>
+        </div>
+    {% endif %}
+
+    <form method="post" novalidate>
+        {% csrf_token %}
+
+        <section class="panel">
+            <h2 class="panel-titulo">Datos del paciente</h2>
+            <div class="panel-cuerpo">
+                {% if historia.id %}
+                    <dl class="ficha">
+                        <dt>Paciente</dt><dd>{{ historia.paciente.nombre }}</dd>
+                        <dt>Documento</dt><dd>{{ historia.paciente.documento }}</dd>
+                        <dt>Fecha de nacimiento</dt><dd>{{ historia.paciente.fecha_nacimiento|date:"d/m/Y" }}</dd>
+                        <dt>Teléfono</dt><dd>{{ historia.paciente.telefono|default:"—" }}</dd>
+                    </dl>
+                    <p class="ayuda">Los datos del paciente se modifican desde <a class="enlace" href="{% url 'update_usuario' historia.paciente.id %}">su usuario</a>.</p>
+                {% else %}
+                    <div class="campo{% if errores.paciente %} con-error{% endif %}">
+                        <label for="paciente">Paciente registrado <span class="obligatorio">*</span></label>
+                        <select id="paciente" name="paciente" required>
+                            <option value="">Selecciona un paciente</option>
+                            {% for p in pacientes %}
+                                <option value="{{ p.id }}"{% if historia.paciente_id == p.id %} selected{% endif %}>{{ p.nombre }} — {{ p.documento|default:"sin documento" }}</option>
+                            {% endfor %}
+                        </select>
+                        <p class="ayuda">Solo aparecen usuarios con rol Paciente que aún no tienen historia clínica. ¿No está en la lista? <a class="enlace" href="{% url 'create_usuario' %}">Registrar usuario</a>.</p>
+                        {% for mensaje in errores.paciente %}<p class="error">{{ mensaje }}</p>{% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+        </section>
+
+        <section class="panel separado">
+            <h2 class="panel-titulo">Información clínica</h2>
+            <div class="panel-cuerpo campos">
+                <div class="campo campo-ancho{% if errores.alergias %} con-error{% endif %}">
+                    <label for="alergias">Alergias</label>
+                    <textarea id="alergias" name="alergias">{{ historia.alergias|default:'' }}</textarea>
+                    <p class="ayuda">Déjalo vacío si el paciente no tiene alergias conocidas.</p>
+                    {% for mensaje in errores.alergias %}<p class="error">{{ mensaje }}</p>{% endfor %}
+                </div>
+
+                <div class="campo campo-ancho{% if errores.antecedentes %} con-error{% endif %}">
+                    <label for="antecedentes">Antecedentes</label>
+                    <textarea id="antecedentes" name="antecedentes">{{ historia.antecedentes|default:'' }}</textarea>
+                    {% for mensaje in errores.antecedentes %}<p class="error">{{ mensaje }}</p>{% endfor %}
+                </div>
+
+                <div class="campo campo-ancho{% if errores.observaciones %} con-error{% endif %}">
+                    <label for="observaciones">Observaciones</label>
+                    <textarea id="observaciones" name="observaciones">{{ historia.observaciones|default:'' }}</textarea>
+                    {% for mensaje in errores.observaciones %}<p class="error">{{ mensaje }}</p>{% endfor %}
+                </div>
+            </div>
+        </section>
+
+        <div class="acciones">
+            <button class="boton" type="submit">Guardar</button>
+            <a class="boton boton-secundario" href="{% url 'find_historia' %}">Cancelar</a>
+        </div>
+    </form>
+{% endblock %}

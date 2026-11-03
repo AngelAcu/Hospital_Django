@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block title %}Consultar usuarios{% endblock %}
+{% block migas %} / Usuarios / Consultar{% endblock %}
+
+{% block content %}
+    <div class="cabecera">
+        <h1>Usuarios registrados</h1>
+        <a class="boton" href="{% url 'create_usuario' %}">Nuevo usuario</a>
+    </div>
+
+    <section class="panel">
+        <h2 class="panel-titulo">Listado de usuarios ({{ usuarios|length }})</h2>
+        <div class="tabla-contenedor">
+            <table>
+                <thead>
+                    <tr>
+                        <th scope="col">Nombre</th>
+                        <th scope="col">Documento</th>
+                        <th scope="col">Usuario</th>
+                        <th scope="col">Correo</th>
+                        <th scope="col">Teléfono</th>
+                        <th scope="col">Rol</th>
+                        <th scope="col">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for usuario in usuarios %}
+                        <tr>
+                            <td>{{ usuario.nombre }}</td>
+                            <td>{{ usuario.documento|default:"—" }}</td>
+                            <td>{{ usuario.usuario }}</td>
+                            <td>{{ usuario.email }}</td>
+                            <td>{% if usuario.telefono %}{{ usuario.telefono }}{% else %}<span class="apagado">Sin teléfono</span>{% endif %}</td>
+                            <td><span class="rol">{{ usuario.rol.nombre }}</span></td>
+                            <td>
+                                <a class="enlace" href="{% url 'update_usuario' usuario.id %}">Editar</a>
+                                <a class="enlace enlace-peligro" href="{% url 'delete_usuario' usuario.id %}">Eliminar</a>
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td class="vacio" colspan="7">No hay usuarios registrados.</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+{% endblock %}

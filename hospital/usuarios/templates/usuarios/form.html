@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ titulo }}{% endblock %}
+{% block migas %} / Usuarios / {{ titulo }}{% endblock %}
+
+{% block content %}
+    <h1>{{ titulo }}</h1>
+
+    {% if errores %}
+        <div class="aviso aviso-peligro" role="alert">
+            <div>
+                <strong>No se pudo guardar el usuario</strong>
+                {% for mensaje in errores.general %}<p>{{ mensaje }}</p>{% empty %}<p>Corrige los campos marcados en rojo.</p>{% endfor %}
+            </div>
+        </div>
+    {% endif %}
+
+    <section class="panel">
+        <h2 class="panel-titulo">Datos del usuario</h2>
+        <form class="panel-cuerpo" method="post" novalidate>
+            {% csrf_token %}
+            <div class="campos">
+                <div class="campo{% if errores.nombre %} con-error{% endif %}">
+                    <label for="nombre">Nombre completo <span class="obligatorio">*</span></label>
+                    <input id="nombre" name="nombre" type="text" maxlength="200" value="{{ usuario.nombre|default:'' }}" required>
+                    {% for mensaje in errores.nombre %}<p class="error">{{ mensaje }}</p>{% endfor %}
+                </div>
+
+                <div class="campo{% if errores.documento %} con-error{% endif %}">
+                    <label for="documento">Documento de identidad <span class="obligatorio">*</span></label>
+                    <input id="documento" name="documento" type="text" inputmode="numeric" maxlength="15" value="{{ usuario.documento|default:'' }}" required>
+                    <p class="ayuda">Solo números, sin puntos ni espacios.</p>
+                    {% for mensaje in errores.documento %}<p class="error">{{ mensaje }}</p>{% endfor %}
+                </div>
+
+                <div class="campo{% if errores.fecha_nacimiento %} con-error{% endif %}">
+                    <label for="fecha_nacimiento">Fecha de nacimiento</label>
+                    <input id="fecha_nacimiento" name="fecha_nacimiento" type="date" value="{{ fecha_nacimiento }}">
+                    <p class="ayuda">Obligatoria para pacientes.</p>
+                    {% for mensaje in errores.fecha_nacimiento %}<p class="error">{{ mensaje }}</p>{% endfor %}
+                </div>
+
+                <div class="campo{% if errores.email %} con-error{% endif %}">
+                    <label for="email">Correo electrónico <span class="obligatorio">*</span></label>
+                    <input id="email" name="email" type="email" value="{{ usuario.email|default:'' }}" required>
+                    {% for mensaje in errores.email %}<p class="error">{{ mensaje }}</p>{% endfor %}
+                </div>
+
+                <div class="campo{% if errores.usuario %} con-error{% endif %}">
+                    <label for="usuario">Usuario <span class="obligatorio">*</span></label>
+                    <input id="usuario" name="usuario" type="text" maxlength="50" value="{{ usuario.usuario|default:'' }}" required>
+                    <p class="ayuda">Letras, números y guion bajo (_), sin espacios.</p>
+                    {% for mensaje in errores.usuario %}<p class="error">{{ mensaje }}</p>{% endfor %}
+                </div>
+
+                <div class="campo{% if errores.password %} con-error{% endif %}">
+                    <label for="password">Contraseña{% if not usuario.id %} <span class="obligatorio">*</span>{% endif %}</label>
+                    <input id="password" name="password" type="password" autocomplete="new-password"{% if not usuario.id %} required{% endif %}>
+                    <p class="ayuda">{% if usuario.id %}Déjala vacía para conservar la actual.{% else %}Mínimo 6 caracteres.{% endif %}</p>
+                    {% for mensaje in errores.password %}<p class="error">{{ mensaje }}</p>{% endfor %}
+                </div>
+
+                <div class="campo{% if errores.telefono %} con-error{% endif %}">
+                    <label for="telefono">Teléfono</label>
+                    <input id="telefono" name="telefono" type="tel" maxlength="15" inputmode="numeric" value="{{ usuario.telefono|default:'' }}">
+                    <p class="ayuda">Opcional. Entre 7 y 15 números.</p>
+                    {% for mensaje in errores.telefono %}<p class="error">{{ mensaje }}</p>{% endfor %}
+                </div>
+
+                <div class="campo{% if errores.rol %} con-error{% endif %}">
+                    <label for="rol">Rol <span class="obligatorio">*</span></label>
+                    <select id="rol" name="rol" required>
+                        <option value="">Selecciona un rol</option>
+                        {% for valor, etiqueta in roles %}
+                            <option value="{{ valor }}"{% if usuario.rol.nombre == valor %} selected{% endif %}>{{ etiqueta }}</option>
+                        {% endfor %}
+                    </select>
+                    {% for mensaje in errores.rol %}<p class="error">{{ mensaje }}</p>{% endfor %}
+                </div>
+            </div>
+
+            <div class="acciones">
+                <button class="boton" type="submit">Guardar</button>
+                <a class="boton boton-secundario" href="{% url 'find_usuario' %}">Cancelar</a>
+            </div>
+        </form>
+    </section>
+{% endblock %}

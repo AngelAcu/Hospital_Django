@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block title %}Iniciar sesión{% endblock %}
+{% block migas %} / Iniciar sesión{% endblock %}
+
+{% block content %}
+    <div class="acceso">
+        <h1>Iniciar sesión</h1>
+
+        {% if error %}
+            <div class="aviso aviso-peligro" role="alert">
+                <div><strong>{{ error }}</strong></div>
+            </div>
+        {% endif %}
+
+        <section class="panel">
+            <h2 class="panel-titulo">Acceso para usuarios registrados</h2>
+            <form class="panel-cuerpo" method="post" novalidate>
+                {% csrf_token %}
+                <input type="hidden" name="next" value="{{ next }}">
+                <div class="campo">
+                    <label for="usuario">Usuario</label>
+                    <input id="usuario" name="usuario" type="text" autocomplete="username" value="{{ request.POST.usuario|default:'' }}" required autofocus>
+                </div>
+                <div class="campo separado">
+                    <label for="password">Contraseña</label>
+                    <input id="password" name="password" type="password" autocomplete="current-password" required>
+                </div>
+                <div class="acciones">
+                    <button class="boton" type="submit">Ingresar</button>
+                </div>
+            </form>
+        </section>
+    </div>
+{% endblock %}

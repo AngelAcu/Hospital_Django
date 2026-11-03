@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block title %}Usuario actualizado{% endblock %}
+{% block migas %} / Usuarios / Actualizar{% endblock %}
+
+{% block content %}
+    <h1>Actualizar usuario</h1>
+
+    <div class="aviso aviso-info" role="status">
+        <div>
+            <strong>Datos actualizados</strong>
+            <p>Los cambios de {{ usuario.nombre }} se guardaron en el sistema.</p>
+        </div>
+    </div>
+
+    <section class="panel">
+        <h2 class="panel-titulo">Datos actuales</h2>
+        <div class="panel-cuerpo">
+            <dl class="ficha">
+                <dt>Nombre</dt><dd>{{ usuario.nombre }}</dd>
+                <dt>Documento</dt><dd>{{ usuario.documento }}</dd>
+                <dt>Fecha de nacimiento</dt><dd>{{ usuario.fecha_nacimiento|date:"d/m/Y"|default:"—" }}</dd>
+                <dt>Usuario</dt><dd>{{ usuario.usuario }}</dd>
+                <dt>Correo</dt><dd>{{ usuario.email }}</dd>
+                <dt>Teléfono</dt><dd>{{ usuario.telefono|default:"Sin teléfono" }}</dd>
+                <dt>Rol</dt><dd><span class="rol">{{ usuario.rol.nombre }}</span></dd>
+            </dl>
+            <div class="acciones">
+                <a class="boton" href="{% url 'find_usuario' %}">Ver listado de usuarios</a>
+            </div>
+        </div>
+    </section>
+{% endblock %}
