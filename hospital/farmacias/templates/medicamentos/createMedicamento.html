@@ -1,0 +1,47 @@
+
+{% extends 'base.html' %}
+
+{% block title %}Medicamento creado{% endblock %}
+{% block migas %} / Farmacias / Medicamentos / Crear{% endblock %}
+
+{% block content %}
+    <h1>Nuevo medicamento</h1>
+
+    <div class="aviso aviso-exito" role="status">
+        <div>
+            <strong>El medicamento se creó correctamente</strong>
+            <p>El medicamento {{ medicamento.nombre }} quedó registrado en el inventario.</p>
+        </div>
+    </div>
+
+    <section class="panel">
+        <h2 class="panel-titulo">Resumen del medicamento</h2>
+
+        <div class="panel-cuerpo">
+            <dl class="ficha">
+                <dt>Código</dt>
+                <dd>{{ medicamento.codigo }}</dd>
+
+                <dt>Nombre</dt>
+                <dd>{{ medicamento.nombre }}</dd>
+
+                <dt>Descripción</dt>
+                <dd>{{ medicamento.descripcion }}</dd>
+
+                <dt>Stock</dt>
+                <dd>{{ medicamento.stock }}</dd>
+
+                <dt>Precio</dt>
+                <dd>${{ medicamento.precio|floatformat:2 }}</dd>
+
+                <dt>Fecha de vencimiento</dt>
+                <dd>{{ medicamento.fecha_vencimiento|date:"d/m/Y" }}</dd>
+            </dl>
+
+            <div class="acciones">
+                <a class="boton" href="{% url 'find_medicamento' %}">Ver medicamentos</a>
+                <a class="boton boton-secundario" href="{% url 'create_medicamento' %}">Registrar otro</a>
+            </div>
+        </div>
+    </section>
+{% endblock %}

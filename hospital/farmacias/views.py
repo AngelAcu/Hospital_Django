@@ -1,138 +1,200 @@
-from django.http import HttpResponse
-from django.shortcuts import render, redirect
-from .models import Medicamento, Dispensacion
-from .forms import FormularioFarmacias
 
-def inicio(request):
-    return HttpResponse("<h1>Hola mundo</h1> <br> <p>Hola mundo</p>")
+from django.core.exceptions import ValidationError
+from django.shortcuts import get_object_or_404, redirect, render
+from django.utils.dateparse import parse_date
+from bson import ObjectId
 
-def goParams(request, id):
-    return HttpResponse(f"<h1>El id ingresado es {id}</h1>")
+from usuarios.sesion import login_requerido
 
-def goIndex(request, decision):
-    data = {
-        "id": "1",
-        "nombre": "Juan",
-        "esAdministrador": decision
+from .models import Medicamento
+
+
+@login_requerido
+def inicio_medicamento(request):
+    return redirect('find_medicamento')
+
+def _datos_medicamento(request):
+    errores = {}
+
+    nombre = request.POST.get('nombre', '').strip()
+    descripcion = request.POST.get('descripcion', '').strip()
+    codigo = request.POST.get('codigo', '').strip()
+    fecha_vencimiento = parse_date(request.POST.get('fecha_vencimiento', ''))
+
+    stock = request.POST.get('stock', '').strip()
+    precio = request.POST.get('precio', '').strip()
+
+    if not nombre:
+        errores['nombre'] = ['El nombre del medicamento es obligatorio.']
+
+    if not descripcion:
+        errores['descripcion'] = ['La descripción es obligatoria.']
+
+    if not codigo:
+        errores['codigo'] = ['El código del medicamento es obligatorio.']
+
+    if fecha_vencimiento is None:
+        errores['fecha_vencimiento'] = [
+            'Ingresa una fecha de vencimiento válida.'
+        ]
+
+    try:
+        stock = int(stock)
+        if stock <= 0:
+            errores['stock'] = ['El stock no puede ser negativo o igual a 0.']
+    except (ValueError, TypeError):
+        stock = None
+        errores['stock'] = ['Ingresa una cantidad de stock válida.']
+
+    try:
+        precio = float(precio)
+        if precio < 0:
+            errores['precio'] = ['El precio no puede ser negativo.']
+        elif precio == 0:
+            errores['precio'] = ['El precio debe ser mayor a 0']
+    except (ValueError, TypeError):
+        precio = None
+        errores['precio'] = ['Ingresa un precio válido.']
+
+    return {
+        'nombre': nombre,
+        'descripcion': descripcion,
+        'codigo': codigo,
+        'fecha_vencimiento': fecha_vencimiento,
+        'stock': stock,
+        'precio': precio,
+    }, errores
+
+
+def _formulario_contexto(medicamento=None, errores=None, titulo='Nuevo medicamento'):
+    return {
+        'medicamento': medicamento,
+        'errores': errores or {},
+        'titulo': titulo,
     }
-    
-    data_ciclos = [
-        {
-            "id": "1020",
-            "nombre": "naproxeno",
-            "costo": 45000
-        }, 
-        {
-            "id": "1060",
-            "nombre": "amoxicilina",
-            "costo": 95000
-        },
-        {
-            "id": "1905",
-            "nombre": "advil",
-            "costo": 8700
-        }
-    ]
-    
-    return render(request, 'index.html', {"usuario": data, "medicamentos": data_ciclos})
 
-def create(request):
-    data = Medicamento.objects.create(
-        nombre="Acetaminofén",
-        descripcion="Medicamento para aliviar el dolor y la fiebre",
-        stock=100,
-        precio=5000.0,
-        fecha_vencimiento="2027-12-31",
-        codigo="MED006"
+
+@login_requerido
+def create_medicamento(request):
+
+    medicamento_vacio = {
+        'nombre': '',
+        'descripcion': '',
+        'codigo': '',
+        'fecha_vencimiento': None,
+        'stock': 0,
+        'precio': '',
+    }
+
+    if request.method == 'POST':
+
+        datos, errores = _datos_medicamento(request)
+
+        if not errores:
+            data = Medicamento(**datos)
+
+            try:
+                data.full_clean()
+                data.save()
+
+            except ValidationError as error:
+                errores['general'] = error.messages
+
+            else:
+                return render(
+                    request,
+                    'medicamentos/createMedicamento.html',
+                    {'medicamento': data}
+                )
+
+        contexto = _formulario_contexto(errores=errores)
+        contexto['medicamento'] = medicamento_vacio
+
+        return render(
+            request,
+            'medicamentos/formMedicamento.html',
+            contexto
+        )
+
+    contexto = _formulario_contexto()
+    contexto['medicamento'] = medicamento_vacio
+
+    return render(
+        request,
+        'medicamentos/formMedicamento.html',
+        contexto
     )
-    
-    return render(request, 'create.html', {'medicamento': data})
 
-def find(request):
+
+@login_requerido
+def find_medicamento(request):
+
     data = Medicamento.objects.all()
-    
-    return render(request, 'find.html', {'medicamentos': data})
 
-def delete(request):
-    data = Medicamento.objects.get(codigo='MED006')
-    data.delete()
-    
-    return render(request, 'delete.html', {'medicamento': data})
-
-def update(request):
-    data = Medicamento.objects.get(codigo='MED006')
-    
-    data.precio = 2500
-    data.stock = 15
-    data.nombre = "clonazepaam"
-    data.descripcion = "medicamento actualizado"
-    
-    data.save()
-    
-    return render(request, 'update.html', {'medicamento': data})
-
-def createDispensacion(request):
-    data = Dispensacion.objects.create(
-        cantidad=2,
-        observacion="Dispensación de prueba",
-
-        paciente={
-            "documento": "123456789010",
-            "nombre": "Angel David Acuña Meza"
-        },
-
-        medicamento={
-            "codigo": "MED004",
-            "nombre": "Acetaminofén",
-            "precio": 5000.0
-        }
+    return render(
+        request,
+        'medicamentos/findMedicamento.html',
+        {'medicamentos': data}
     )
 
-    return render(request, 'createDispensacion.html', {'dispensacion': data})
 
+@login_requerido
+def update_medicamento(request, id):
 
-def findDispensacion(request):
-    data = Dispensacion.objects.all()
+    data = get_object_or_404(
+        Medicamento,
+        _id=ObjectId(id)
+    )
 
-    return render(request, 'findDispensacion.html', {'dispensaciones': data})
+    if request.method == 'POST':
 
-def deleteDispensacion(request):
-    data = Dispensacion.objects.get(id=1)
-    data.delete()
+        datos, errores = _datos_medicamento(request)
 
-    return render(request, 'deleteDispensacion.html', {'dispensacion': data})
+        if not errores:
+            data.nombre = datos['nombre']
+            data.descripcion = datos['descripcion']
+            data.codigo = datos['codigo']
+            data.fecha_vencimiento = datos['fecha_vencimiento']
+            data.stock = datos['stock']
+            data.precio = datos['precio']
 
-def updateDispensacion(request):
-    data = Dispensacion.objects.get(id=3)
+            try:
+                data.full_clean()
+                data.save()
 
-    data.cantidad = 5
-    data.observacion = "Dispensación actualizada"
-    
-    data.paciente = {
-        "documento": "1234567890",
-        "nombre": "Angel David Acuña Meza"
-    }
+            except ValidationError as error:
+                errores['general'] = error.messages
 
-    data.medicamento = {
-        "codigo": "MED006",
-        "nombre": "Acetaminofén actualizado",
-        "precio": 2500.0
-    }
+            else:
+                return render(
+                    request,
+                    'medicamentos/updateMedicamento.html',
+                    {'medicamento': data}
+                )
 
-    data.save()
+        return render(
+            request,
+            'medicamentos/formMedicamento.html',
+            _formulario_contexto(
+                data,
+                errores,
+                'Editar medicamento'
+            )
+        )
 
-    return render(request, 'updateDispensacion.html', {'dispensacion': data})
+    return render(request, 'medicamentos/formMedicamento.html', _formulario_contexto(data, titulo='Editar medicamento'))
 
-def createFarmacia(request):
-    if request.method == 'GET':
-        if 'nombre' in request.GET:
-            nombre = request.GET['nombre']
-            
-        return render(request, 'crear-farmacia.html', {'formulario': FormularioFarmacias})
-    
-    else:
-        if 'nombre' in request.POST:
-            nombre = request.POST['nombre']
-            print(f"Se esta guardando el usuario {nombre}")
-    
-        ##return redirect('inicio')
+@login_requerido
+def delete_medicamento(request, id):
+
+    data = get_object_or_404(Medicamento, _id=ObjectId(id))
+
+    if request.method == 'POST':
+
+        data.delete()
+
+        return render(request, 'medicamentos/deleteMedicamento.html', {'medicamento': data,'confirmar': False})
+
+    return render(request,'medicamentos/deleteMedicamento.html',{'medicamento': data, 'confirmar': True})
+
+## DISPENSACIONES

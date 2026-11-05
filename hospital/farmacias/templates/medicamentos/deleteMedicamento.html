@@ -1,0 +1,47 @@
+
+{% extends 'base.html' %}
+
+{% block title %}Eliminar medicamento{% endblock %}
+{% block migas %} / Farmacias / Medicamentos / Eliminar{% endblock %}
+
+{% block content %}
+    <h1>Eliminar medicamento</h1>
+
+    {% if confirmar %}
+        <div class="aviso aviso-peligro" role="alert">
+            <div>
+                <strong>¿Deseas eliminar este medicamento?</strong>
+                <p>
+                    {{ medicamento.nombre }} · Código: {{ medicamento.codigo }}
+                </p>
+                <p>Esta acción eliminará permanentemente el registro del inventario.</p>
+            </div>
+        </div>
+
+        <form method="post" class="acciones">
+            {% csrf_token %}
+
+            <button class="boton boton-peligro" type="submit">
+                Sí, eliminar medicamento
+            </button>
+
+            <a class="boton boton-secundario" href="{% url 'find_medicamento' %}">
+                Volver
+            </a>
+        </form>
+
+    {% else %}
+        <div class="aviso aviso-exito" role="status">
+            <div>
+                <strong>Medicamento eliminado correctamente</strong>
+                <p>El medicamento {{ medicamento.nombre }} fue eliminado del inventario.</p>
+            </div>
+        </div>
+
+        <div class="acciones">
+            <a class="boton" href="{% url 'find_medicamento' %}">
+                Volver al inventario
+            </a>
+        </div>
+    {% endif %}
+{% endblock %}

@@ -16,6 +16,7 @@ class MedicamentoDispensacion(models.Model):
         abstract = True
 
 class Dispensacion(models.Model):
+    _id = models.ObjectIdField()
     cantidad = models.IntegerField()
     fecha = models.DateTimeField(auto_now_add=True)
     observacion = models.TextField(blank=True, null=True)
@@ -23,9 +24,14 @@ class Dispensacion(models.Model):
     medicamento = models.EmbeddedField(model_container=MedicamentoDispensacion)
     
 class Medicamento(models.Model):
+    _id = models.ObjectIdField()
     nombre = models.CharField(max_length=200)
     descripcion = models.TextField()
     stock = models.IntegerField(default=0)
     precio = models.FloatField()
     fecha_vencimiento = models.DateField()
     codigo = models.CharField(max_length=50,unique=True)
+    
+    @property
+    def id(self):
+        return str(self._id)

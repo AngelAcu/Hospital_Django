@@ -1,0 +1,118 @@
+
+{% if errores %}
+    <div class="aviso aviso-peligro" role="alert">
+        <div>
+            <strong>No se pudo guardar el medicamento</strong>
+            {% for mensaje in errores.general %}
+                <p>{{ mensaje }}</p>
+            {% empty %}
+                <p>Corrige los campos marcados e inténtalo de nuevo.</p>
+            {% endfor %}
+        </div>
+    </div>
+{% endif %}
+
+<form method="post" novalidate>
+    {% csrf_token %}
+
+    <section class="panel">
+        <h2 class="panel-titulo">Datos del medicamento</h2>
+
+        <div class="panel-cuerpo campos">
+
+            <div class="campo">
+                <label for="codigo">Código <span class="obligatorio">*</span></label>
+                <input
+                    id="codigo"
+                    name="codigo"
+                    type="text"
+                    maxlength="50"
+                    required
+                    value="{{ request.POST.codigo|default:medicamento.codigo|default:'' }}"
+                >
+                {% for mensaje in errores.codigo %}
+                    <p class="error">{{ mensaje }}</p>
+                {% endfor %}
+            </div>
+
+            <div class="campo">
+                <label for="nombre">Nombre <span class="obligatorio">*</span></label>
+                <input
+                    id="nombre"
+                    name="nombre"
+                    type="text"
+                    maxlength="200"
+                    required
+                    value="{{ request.POST.nombre|default:medicamento.nombre|default:'' }}"
+                >
+                {% for mensaje in errores.nombre %}
+                    <p class="error">{{ mensaje }}</p>
+                {% endfor %}
+            </div>
+
+            <div class="campo campo-ancho">
+                <label for="descripcion">Descripción <span class="obligatorio">*</span></label>
+                <textarea
+                    id="descripcion"
+                    name="descripcion"
+                    required
+                >{% if request.method == 'POST' %}{{ request.POST.descripcion }}{% elif medicamento %}{{ medicamento.descripcion }}{% endif %}</textarea>
+
+                {% for mensaje in errores.descripcion %}
+                    <p class="error">{{ mensaje }}</p>
+                {% endfor %}
+            </div>
+
+            <div class="campo">
+                <label for="stock">Stock <span class="obligatorio">*</span></label>
+                <input
+                    id="stock"
+                    name="stock"
+                    type="number"
+                    min="0"
+                    required
+                    value="{{ request.POST.stock|default:medicamento.stock|default:'0' }}"
+                >
+                {% for mensaje in errores.stock %}
+                    <p class="error">{{ mensaje }}</p>
+                {% endfor %}
+            </div>
+
+            <div class="campo">
+                <label for="precio">Precio <span class="obligatorio">*</span></label>
+                <input
+                    id="precio"
+                    name="precio"
+                    type="number"
+                    min="0"
+                    step="0.01"
+                    required
+                    value="{{ request.POST.precio|default:medicamento.precio|default:'' }}"
+                >
+                {% for mensaje in errores.precio %}
+                    <p class="error">{{ mensaje }}</p>
+                {% endfor %}
+            </div>
+
+            <div class="campo">
+                <label for="fecha_vencimiento">Fecha de vencimiento <span class="obligatorio">*</span></label>
+                <input
+                    id="fecha_vencimiento"
+                    name="fecha_vencimiento"
+                    type="date"
+                    required
+                    value="{% if request.POST.fecha_vencimiento %}{{ request.POST.fecha_vencimiento }}{% elif medicamento.fecha_vencimiento %}{{ medicamento.fecha_vencimiento|date:'Y-m-d' }}{% endif %}"
+                >
+                {% for mensaje in errores.fecha_vencimiento %}
+                    <p class="error">{{ mensaje }}</p>
+                {% endfor %}
+            </div>
+
+        </div>
+    </section>
+
+    <div class="acciones">
+        <button class="boton" type="submit">Guardar medicamento</button>
+        <a class="boton boton-secundario" href="{% url 'find_medicamento' %}">Cancelar</a>
+    </div>
+</form>

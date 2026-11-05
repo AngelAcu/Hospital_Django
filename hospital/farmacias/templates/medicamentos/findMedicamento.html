@@ -1,0 +1,55 @@
+
+{% extends 'base.html' %}
+
+{% block title %}Medicamentos{% endblock %}
+{% block migas %} / Farmacias / Medicamentos / Consultar{% endblock %}
+
+{% block content %}
+    <div class="cabecera">
+        <h1>Medicamentos</h1>
+        <a class="boton" href="{% url 'create_medicamento' %}">Nuevo medicamento</a>
+    </div>
+
+    <section class="panel">
+        <h2 class="panel-titulo">Inventario de medicamentos ({{ medicamentos|length }})</h2>
+
+        <div class="tabla-contenedor">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Código</th>
+                        <th>Nombre</th>
+                        <th>Descripción</th>
+                        <th>Stock</th>
+                        <th>Precio</th>
+                        <th>Vencimiento</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for medicamento in medicamentos %}
+                        <tr>
+                            <td><strong>{{ medicamento.codigo }}</strong></td>
+                            <td>{{ medicamento.nombre }}</td>
+                            <td>{{ medicamento.descripcion }}</td>
+                            <td>
+                                <span class="rol">{{ medicamento.stock }}</span>
+                            </td>
+                            <td>${{ medicamento.precio|floatformat:2 }}</td>
+                            <td>{{ medicamento.fecha_vencimiento|date:"d/m/Y" }}</td>
+                            <td>
+                                <a class="enlace" href="{% url 'update_medicamento' medicamento.id %}">Editar</a>
+                                <a class="enlace enlace-peligro" href="{% url 'delete_medicamento' medicamento.id %}">Eliminar</a>
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td class="vacio" colspan="7">No hay medicamentos registrados.</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+{% endblock %}

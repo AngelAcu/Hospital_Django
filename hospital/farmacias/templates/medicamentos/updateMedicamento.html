@@ -1,0 +1,20 @@
+
+{% extends 'base.html' %}
+
+{% block title %}Medicamento actualizado{% endblock %}
+{% block migas %} / Farmacias / Medicamentos / Editar{% endblock %}
+
+{% block content %}
+    <h1>Editar medicamento</h1>
+
+    <div class="aviso aviso-info" role="status">
+        <div>
+            <strong>Datos actualizados</strong>
+            <p>Los cambios del medicamento {{ medicamento.nombre }} se guardaron correctamente.</p>
+        </div>
+    </div>
+
+    <div class="acciones">
+        <a class="boton" href="{% url 'find_medicamento' %}">Volver al inventario</a>
+    </div>
+{% endblock %}

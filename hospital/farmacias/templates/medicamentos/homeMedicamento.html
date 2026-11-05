@@ -1,0 +1,24 @@
+
+{% extends 'base.html' %}
+
+{% block title %}Módulo de medicamentos{% endblock %}
+{% block migas %} / Farmacias / Medicamentos{% endblock %}
+
+{% block content %}
+    <div class="cabecera">
+        <h1>Gestión de medicamentos</h1>
+        <a class="boton" href="{% url 'find_medicamento' %}">Consultar medicamentos</a>
+    </div>
+
+    <section class="panel">
+        <h2 class="panel-titulo">Módulo de medicamentos</h2>
+        <div class="panel-cuerpo">
+            <p>Administra el inventario, los precios y las fechas de vencimiento de los medicamentos.</p>
+
+            <div class="acciones">
+                <a class="boton" href="{% url 'create_medicamento' %}">Nuevo medicamento</a>
+                <a class="boton boton-secundario" href="{% url 'find_medicamento' %}">Ver listado</a>
+            </div>
+        </div>
+    </section>
+{% endblock %}
