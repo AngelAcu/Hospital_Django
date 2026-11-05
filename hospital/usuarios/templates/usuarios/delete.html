@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block title %}Eliminar usuario{% endblock %}
+{% block migas %} / Usuarios / Eliminar{% endblock %}
+
+{% block content %}
+    <h1>Eliminar usuario</h1>
+
+    {% if error %}
+        <div class="aviso aviso-peligro" role="alert">
+            <div><strong>{{ error }}</strong></div>
+        </div>
+    {% endif %}
+
+    {% if confirmar %}
+        <div class="aviso aviso-peligro" role="alert">
+            <div>
+                <strong>¿Eliminar a {{ usuario.nombre }}?</strong>
+                <p>Se borrará el usuario {{ usuario.usuario }} ({{ usuario.email }}). Esta acción no se puede deshacer.</p>
+            </div>
+        </div>
+
+        <form method="post" class="acciones">
+            {% csrf_token %}
+            <button class="boton boton-peligro" type="submit">Sí, eliminar</button>
+            <a class="boton boton-secundario" href="{% url 'find_usuario' %}">Cancelar</a>
+        </form>
+    {% else %}
+        <div class="aviso aviso-peligro" role="status">
+            <div>
+                <strong>Usuario eliminado</strong>
+                <p>El registro de {{ usuario.nombre }} ({{ usuario.email }}) se eliminó del sistema.</p>
+            </div>
+        </div>
+
+        <div class="acciones">
+            <a class="boton" href="{% url 'find_usuario' %}">Volver al listado de usuarios</a>
+        </div>
+    {% endif %}
+{% endblock %}

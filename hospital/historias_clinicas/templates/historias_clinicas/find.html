@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block title %}Historias clínicas{% endblock %}
+{% block migas %} / Historias clínicas / Consultar{% endblock %}
+
+{% block content %}
+    <div class="cabecera">
+        <h1>Historias clínicas</h1>
+        <a class="boton" href="{% url 'create_historia' %}">Nueva historia clínica</a>
+    </div>
+
+    <section class="panel">
+        <h2 class="panel-titulo">Listado de historias ({{ historias|length }})</h2>
+        <div class="tabla-contenedor">
+            <table>
+                <thead>
+                    <tr>
+                        <th scope="col">N.º</th>
+                        <th scope="col">Documento</th>
+                        <th scope="col">Paciente</th>
+                        <th scope="col">Nacimiento</th>
+                        <th scope="col">Teléfono</th>
+                        <th scope="col">Alergias</th>
+                        <th scope="col">Apertura</th>
+                        <th scope="col">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for h in historias %}
+                        <tr>
+                            <td>{{ h.id }}</td>
+                            <td>{{ h.paciente.documento }}</td>
+                            <td>{{ h.paciente.nombre }}</td>
+                            <td>{{ h.paciente.fecha_nacimiento|date:"d/m/Y" }}</td>
+                            <td>{{ h.paciente.telefono|default:"—" }}</td>
+                            <td>{% if h.alergias %}<span class="alerta-clinica">{{ h.alergias|truncatechars:40 }}</span>{% else %}<span class="apagado">Ninguna registrada</span>{% endif %}</td>
+                            <td>{{ h.fecha_creacion|date:"d/m/Y" }}</td>
+                            <td>
+                                <a class="enlace" href="{% url 'update_historia' h.id %}">Editar</a>
+                                <a class="enlace enlace-peligro" href="{% url 'delete_historia' h.id %}">Eliminar</a>
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td class="vacio" colspan="8">No hay historias clínicas registradas.</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+{% endblock %}

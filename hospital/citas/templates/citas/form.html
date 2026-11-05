@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ titulo }}{% endblock %}
+{% block migas %} / Citas / {{ titulo }}{% endblock %}
+
+{% block content %}
+    <h1>{{ titulo }}</h1>
+    {% include 'citas/form_fields.html' %}
+{% endblock %}

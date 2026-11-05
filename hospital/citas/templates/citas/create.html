@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block title %}Cita creada{% endblock %}
+{% block migas %} / Citas / Crear{% endblock %}
+
+{% block content %}
+    <h1>Nueva cita médica</h1>
+    <div class="aviso aviso-exito" role="status">
+        <div>
+            <strong>La cita se creó correctamente</strong>
+            <p>La cita N.º {{ cita.id }} quedó guardada para {{ cita.paciente.nombre }}.</p>
+        </div>
+    </div>
+    <section class="panel">
+        <h2 class="panel-titulo">Resumen de la cita</h2>
+        <div class="panel-cuerpo">
+            <dl class="ficha">
+                <dt>Fecha y hora</dt><dd>{{ cita.fecha|date:"d/m/Y H:i" }}</dd>
+                <dt>Paciente</dt><dd>{{ cita.paciente.nombre }} ({{ cita.paciente.documento }})</dd>
+                <dt>Médico</dt><dd>{{ cita.medico.nombre }} · {{ cita.medico.especialidad }}</dd>
+                <dt>Motivo</dt><dd>{{ cita.motivo }}</dd>
+                <dt>Estado</dt><dd><span class="rol">{{ cita.estado }}</span></dd>
+            </dl>
+            <div class="acciones">
+                <a class="boton" href="{% url 'find_cita' %}">Ver citas</a>
+                <a class="boton boton-secundario" href="{% url 'create_cita' %}">Agendar otra</a>
+            </div>
+        </div>
+    </section>
+{% endblock %}

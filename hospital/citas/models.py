@@ -18,8 +18,13 @@ class MedicoCita(models.Model):
         abstract = True
 
 class Cita(models.Model):
+    _id = models.ObjectIdField() 
     fecha = models.DateTimeField()
     motivo = models.CharField(max_length=300)
     estado = models.CharField(max_length=20)
     paciente = models.EmbeddedField(model_container=PacienteCita)
     medico = models.EmbeddedField(model_container=MedicoCita)
+    
+    @property
+    def id(self):
+        return str(self._id)

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Actualizar Factura</title>
+</head>
+<body>
+    <h1>Factura Actualizada</h1>
+    <p><b>ID:</b> {{ factura.id }}</p>
+    <p><b>Código:</b> {{ factura.codigo }}</p>
+    <p><b>Fecha:</b> {{ factura.fecha }}</p>
+    <p><b>Total:</b> {{ factura.total }}</p>
+    <p><b>Estado:</b> {{ factura.estado }}</p>
+    <p><b>Observaciones:</b> {{ factura.observaciones }}</p>
+
+    <h3>Paciente</h3>
+    <p><b>Documento:</b> {{ factura.paciente.documento }}</p>
+    <p><b>Nombre:</b> {{ factura.paciente.nombre }}</p>
+
+    <h3>Conceptos</h3>
+    <table border="1" cellpadding="6">
+        <tr>
+            <th>Descripción</th>
+            <th>Valor</th>
+        </tr>
+        {% for c in factura.conceptos %}
+        <tr>
+            <td>{{ c.descripcion }}</td>
+            <td>{{ c.valor }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

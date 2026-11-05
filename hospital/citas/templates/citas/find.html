@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block title %}Citas médicas{% endblock %}
+{% block migas %} / Citas / Consultar{% endblock %}
+
+{% block content %}
+    <div class="cabecera">
+        <h1>Citas médicas</h1>
+        <a class="boton" href="{% url 'create_cita' %}">Nueva cita</a>
+    </div>
+    <section class="panel">
+        <h2 class="panel-titulo">Listado de citas ({{ citas|length }})</h2>
+        <div class="tabla-contenedor">
+            <table>
+                <thead>
+                    <tr><th>Fecha y hora</th><th>Paciente</th><th>Médico</th><th>Motivo</th><th>Estado</th><th>Acciones</th></tr>
+                </thead>
+                <tbody>
+                    {% for cita in citas %}
+                        <tr>
+                            <td><strong>{{ cita.fecha|date:"d/m/Y H:i" }}</strong></td>
+                            <td>{{ cita.paciente.nombre }}<br><small class="apagado">{{ cita.paciente.documento }}</small></td>
+                            <td>{{ cita.medico.nombre }}<br><span class="rol">{{ cita.medico.especialidad }}</span></td>
+                            <td>{{ cita.motivo }}</td>
+                            <td><span class="alerta-clinica">{{ cita.estado }}</span></td>
+                            <td>
+                                <a class="enlace" href="{% url 'update_cita' cita.id %}">Editar</a>
+                                {% if cita.estado != 'Cancelada' %}<a class="enlace enlace-peligro" href="{% url 'delete_cita' cita.id %}">Cancelar</a>{% endif %}
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr><td class="vacio" colspan="6">No hay citas médicas registradas.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+{% endblock %}

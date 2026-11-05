@@ -1,0 +1,153 @@
+{% if errores %}
+    <div class="aviso aviso-peligro" role="alert">
+        <div>
+            <strong>No se pudo guardar la cita</strong>
+            {% for mensaje in errores.general %}<p>{{ mensaje }}</p>{% empty %}<p>Corrige los campos marcados e inténtalo de nuevo.</p>{% endfor %}
+        </div>
+    </div>
+{% endif %}
+
+<form method="post" novalidate>
+    {% csrf_token %}
+    <section class="panel">
+        <h2 class="panel-titulo">Datos de la cita</h2>
+        <div class="panel-cuerpo campos">
+            <div class="campo">
+                <label for="fecha">Fecha y hora <span class="obligatorio">*</span></label>
+                <input id="fecha" name="fecha" type="datetime-local" required value="{% if request.POST.fecha %}{{ request.POST.fecha }}{% elif cita %}{{ cita.fecha|date:'Y-m-d\TH:i' }}{% endif %}">
+                {% for mensaje in errores.fecha %}<p class="error">{{ mensaje }}</p>{% endfor %}
+            </div>
+            <div class="campo">
+                <label for="estado">Estado <span class="obligatorio">*</span></label>
+                <select id="estado" name="estado">
+                    {% for estado in estados %}
+                        <option value="{{ estado }}"{% if request.POST.estado|default:cita.estado == estado %} selected{% endif %}>{{ estado }}</option>
+                    {% endfor %}
+                </select>
+                {% for mensaje in errores.estado %}<p class="error">{{ mensaje }}</p>{% endfor %}
+            </div>
+            <div class="campo campo-ancho">
+                <label for="motivo">Motivo <span class="obligatorio">*</span></label>
+                <textarea id="motivo" name="motivo" required>{% if request.POST.motivo %}{{ request.POST.motivo }}{% elif cita %}{{ cita.motivo }}{% endif %}</textarea>
+                {% for mensaje in errores.motivo %}<p class="error">{{ mensaje }}</p>{% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <!-- SECCIÓN PACIENTE (SELECTOR MONGO) -->
+    <section class="panel separado">
+        <h2 class="panel-titulo">Paciente</h2>
+        <div class="panel-cuerpo campos">
+            <div class="campo">
+                <label for="paciente_documento">Buscar Paciente Registrado <span class="obligatorio">*</span></label>
+                <select id="paciente_documento" name="paciente_documento" required onchange="actualizarPaciente(this)">
+                    <option value="">-- Seleccione un paciente --</option>
+                    {% for p in pacientes %}
+                        <option value="{{ p.documento }}" 
+                                data-nombre="{{ p.nombre }}" 
+                                data-telefono="{{ p.telefono|default:'' }}" 
+                                data-correo="{{ p.email|default:'' }}"
+                                {% if request.POST.paciente_documento|default:cita.paciente.documento == p.documento %}selected{% endif %}>
+                            {{ p.nombre }} (Doc: {{ p.documento }})
+                        </option>
+                    {% endfor %}
+                </select>
+                {% for mensaje in errores.paciente_documento %}<p class="error">{{ mensaje }}</p>{% endfor %}
+            </div>
+            <div class="campo">
+                <label for="paciente_nombre">Nombre completo <span class="obligatorio">*</span></label>
+                <input id="paciente_nombre" name="paciente_nombre" required readonly value="{{ request.POST.paciente_nombre|default:cita.paciente.nombre }}" style="background: var(--fondo); cursor: not-allowed;">
+                {% for mensaje in errores.paciente_nombre %}<p class="error">{{ mensaje }}</p>{% endfor %}
+            </div>
+            <div class="campo">
+                <label for="paciente_telefono">Teléfono</label>
+                <input id="paciente_telefono" name="paciente_telefono" readonly value="{{ request.POST.paciente_telefono|default:cita.paciente.telefono }}" style="background: var(--fondo); cursor: not-allowed;">
+            </div>
+            <div class="campo">
+                <label for="paciente_correo">Correo</label>
+                <input id="paciente_correo" name="paciente_correo" type="email" readonly value="{{ request.POST.paciente_correo|default:cita.paciente.correo }}" style="background: var(--fondo); cursor: not-allowed;">
+            </div>
+        </div>
+    </section>
+
+    <!-- SECCIÓN PERSONAL DE SALUD (SELECTOR MONGO) -->
+    <section class="panel separado">
+        <h2 class="panel-titulo">Asignación de Personal Médico</h2>
+        <div class="panel-cuerpo campos">
+            <div class="campo">
+                <label for="medico_select">Buscar Personal de Salud <span class="obligatorio">*</span></label>
+                <select id="medico_select" onchange="actualizarMedico(this)" required>
+                    <option value="">-- Seleccione el profesional --</option>
+                    {% for m in personal %}
+                        <option value="{{ m.documento }}" 
+                                data-nombre="{{ m.nombre }}" 
+                                data-rol="{{ m.rol.nombre }}"
+                                data-especialidad="{{ m.rol.nombre }}"
+                                {% if request.POST.medico_documento|default:cita.medico.documento == m.documento %}selected{% endif %}>
+                            [{{ m.rol.nombre }}] {{ m.nombre }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <!-- Campo oculto para mandar el documento del médico en el POST tal como lo espera tu vista -->
+            <input type="hidden" id="medico_documento" name="medico_documento" value="{{ request.POST.medico_documento|default:cita.medico.documento }}">
+            
+            <div class="campo">
+                <label for="medico_nombre">Nombre completo del Profesional</label>
+                <input id="medico_nombre" name="medico_nombre" required readonly value="{{ request.POST.medico_nombre|default:cita.medico.nombre }}" style="background: var(--fondo); cursor: not-allowed;">
+                {% for mensaje in errores.medico_nombre %}<p class="error">{{ mensaje }}</p>{% endfor %}
+            </div>
+            <div class="campo">
+                <label for="medico_especialidad">Especialidad / Cargo</label>
+                <input id="medico_especialidad" name="medico_especialidad" required readonly value="{{ request.POST.medico_especialidad|default:cita.medico.especialidad }}" style="background: var(--fondo); cursor: not-allowed;">
+                {% for mensaje in errores.medico_especialidad %}<p class="error">{{ mensaje }}</p>{% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <div class="acciones">
+        <button class="boton" type="submit">Guardar cita</button>
+        <a class="boton boton-secundario" href="{% url 'find_cita' %}">Cancelar</a>
+    </div>
+</form>
+
+<!-- SCRIPT AUTOMÁTICO DE MAPEADO -->
+<script>
+function actualizarPaciente(select) {
+    const opcion = select.options[select.selectedIndex];
+    if (opcion.value) {
+        document.getElementById('paciente_nombre').value = opcion.getAttribute('data-nombre') || '';
+        document.getElementById('paciente_telefono').value = opcion.getAttribute('data-telefono') || '';
+        document.getElementById('paciente_correo').value = opcion.getAttribute('data-correo') || '';
+    } else {
+        document.getElementById('paciente_nombre').value = '';
+        document.getElementById('paciente_telefono').value = '';
+        document.getElementById('paciente_correo').value = '';
+    }
+}
+
+function actualizarMedico(select) {
+    const opcion = select.options[select.selectedIndex];
+    if (opcion.value) {
+        document.getElementById('medico_documento').value = opcion.value;
+        document.getElementById('medico_nombre').value = opcion.getAttribute('data-nombre') || '';
+        
+        const rol = opcion.getAttribute('data-rol') || '';
+        const esp = opcion.getAttribute('data-especialidad') || '';
+        document.getElementById('medico_especialidad').value = rol === 'Médico' ? esp : rol;
+    } else {
+        document.getElementById('medico_documento').value = '';
+        document.getElementById('medico_nombre').value = '';
+        document.getElementById('medico_especialidad').value = '';
+    }
+}
+
+// Ejecutar al cargar la página para mantener los datos en caso de errores en el POST
+document.addEventListener("DOMContentLoaded", function() {
+    const selP = document.getElementById('paciente_documento');
+    if(selP.value) actualizarPaciente(selP);
+    
+    const selM = document.getElementById('medico_select');
+    if(selM.value) actualizarMedico(selM);
+});
+</script>

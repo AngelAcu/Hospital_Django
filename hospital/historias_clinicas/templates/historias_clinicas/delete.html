@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block title %}Eliminar historia clínica{% endblock %}
+{% block migas %} / Historias clínicas / Eliminar{% endblock %}
+
+{% block content %}
+    <h1>Eliminar historia clínica</h1>
+
+    {% if confirmar %}
+        <div class="aviso aviso-peligro" role="alert">
+            <div>
+                <strong>¿Eliminar la historia clínica N.º {{ historia.id }}?</strong>
+                <p>Se borrará la historia de {{ historia.paciente.nombre }} (documento {{ historia.paciente.documento }}) con toda su información clínica. Esta acción no se puede deshacer.</p>
+            </div>
+        </div>
+
+        <form method="post" class="acciones">
+            {% csrf_token %}
+            <button class="boton boton-peligro" type="submit">Sí, eliminar</button>
+            <a class="boton boton-secundario" href="{% url 'find_historia' %}">Cancelar</a>
+        </form>
+    {% else %}
+        <div class="aviso aviso-peligro" role="status">
+            <div>
+                <strong>Historia clínica eliminada</strong>
+                <p>Se eliminó la historia de {{ historia.paciente.nombre }} (documento {{ historia.paciente.documento }}).</p>
+            </div>
+        </div>
+
+        <div class="acciones">
+            <a class="boton" href="{% url 'find_historia' %}">Volver al listado de historias</a>
+        </div>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block title %}Cancelar cita{% endblock %}
+{% block migas %} / Citas / Cancelar{% endblock %}
+
+{% block content %}
+    <h1>Cancelar cita médica</h1>
+    {% if confirmar %}
+        <div class="aviso aviso-peligro" role="alert">
+            <div>
+                <strong>¿Deseas cancelar esta cita?</strong>
+                <p>{{ cita.fecha|date:"d/m/Y H:i" }} · {{ cita.paciente.nombre }} · {{ cita.medico.nombre }}</p>
+            </div>
+        </div>
+        <form method="post" class="acciones">
+            {% csrf_token %}
+            <button class="boton boton-peligro" type="submit">Sí, cancelar cita</button>
+            <a class="boton boton-secundario" href="{% url 'find_cita' %}">Volver</a>
+        </form>
+    {% else %}
+        <div class="aviso aviso-info" role="status">
+            <div>
+                <strong>Cita cancelada correctamente</strong>
+                <p>La cita de {{ cita.paciente.nombre }} ahora tiene estado {{ cita.estado }}.</p>
+            </div>
+        </div>
+        <div class="acciones"><a class="boton" href="{% url 'find_cita' %}">Volver al listado</a></div>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title %}Cita actualizada{% endblock %}
+{% block migas %} / Citas / Editar{% endblock %}
+
+{% block content %}
+    <h1>Editar cita médica</h1>
+    <div class="aviso aviso-info" role="status">
+        <div>
+            <strong>Datos actualizados</strong>
+            <p>Los cambios en la cita N.º {{ cita.id }} se guardaron en el sistema.</p>
+        </div>
+    </div>
+    <div class="acciones">
+        <a class="boton" href="{% url 'find_cita' %}">Volver al listado</a>
+    </div>
+{% endblock %}

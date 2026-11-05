@@ -1,0 +1,48 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Usuarios{% endblock %} · Hospital</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <div class="franja"></div>
+    <header class="encabezado">
+        <div class="encabezado-contenido">
+            <a class="marca" href="{% url 'find_usuario' %}">
+                <span class="marca-icono" aria-hidden="true">
+                    <svg width="20" height="20" viewBox="0 0 20 20"><path fill="#fff" d="M7 0h6v7h7v6h-7v7H7v-7H0V7h7z"/></svg>
+                </span>
+                <span>
+                    <span class="marca-nombre">Hospital</span><br>
+                    <span class="marca-sub">Sistema de gestión hospitalaria</span>
+                </span>
+            </a>
+            {% if request.usuario_actual %}
+                <nav class="nav" aria-label="Principal">
+                    <a href="{% url 'find_historia' %}">Historias clínicas</a>
+                    <a href="{% url 'find_usuario' %}">Usuarios</a>
+                    <a href="{% url 'find_cita' %}">Citas</a>
+                </nav>
+                <form class="sesion" method="post" action="{% url 'logout_usuario' %}">
+                    {% csrf_token %}
+                    <span>{{ request.usuario_actual.nombre }} <small>({{ request.usuario_actual.rol.nombre }})</small></span>
+                    <button class="boton boton-secundario" type="submit">Cerrar sesión</button>
+                </form>
+            {% endif %}
+        </div>
+    </header>
+
+    <main>
+        <div class="migas">Inicio{% block migas %}{% endblock %}</div>
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer>Hospital · Sistema de gestión hospitalaria</footer>
+</body>
+</html>

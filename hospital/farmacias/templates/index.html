@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+
+    <h2>Bienvenido {{usuario.nombre}}</h2>
+    
+    {% if usuario.esAdministrador == 1 %}
+        <label>Bienvenido administrador, tiene todos los modulos habilitados</label>
+    {% else %}
+        <label>Bienvenido usuario {{nombre}}</label>
+    {% endif %}
+
+    <br><br>
+
+    <h3>Medicamentos</h3>
+    {% for medicamento in medicamentos %}
+    <h4>Medicamento</h4>
+    <p>Codigo: {{medicamento.id}}</p>
+    <p>Medicamento: {{medicamento.nombre}}</p>
+    <p>Precio: {{medicamento.costo}}</p>
+
+    {% if medicamento.costo > 12000 %}
+        <label style="color: red;">El medicamento cuesta mas de 12k</label>
+    {% endif %}
+    <br>
+    {% endfor %}
+
+</body>
+</html>

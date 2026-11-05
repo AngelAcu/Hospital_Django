@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block title %}Módulo de citas{% endblock %}
+{% block migas %} / Citas{% endblock %}
+
+{% block content %}
+    <div class="cabecera">
+        <h1>Gestión de citas médicas</h1>
+        <a class="boton" href="{% url 'find_cita' %}">Consultar citas</a>
+    </div>
+    <section class="panel">
+        <h2 class="panel-titulo">Módulo de citas</h2>
+        <div class="panel-cuerpo">
+            <p>Administra la agenda médica, los pacientes y el estado de cada cita.</p>
+            <div class="acciones">
+                <a class="boton" href="{% url 'create_cita' %}">Nueva cita</a>
+                <a class="boton boton-secundario" href="{% url 'find_cita' %}">Ver listado</a>
+            </div>
+        </div>
+    </section>
+{% endblock %}

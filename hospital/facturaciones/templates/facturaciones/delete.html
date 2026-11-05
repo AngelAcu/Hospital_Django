@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Factura Eliminada</title>
+</head>
+<body>
+    <h1>Factura Eliminada</h1>
+    <p><b>ID:</b> {{ factura.id }}</p>
+    <p><b>Código:</b> {{ factura.codigo }}</p>
+    <p><b>Fecha:</b> {{ factura.fecha }}</p>
+    <p><b>Total:</b> {{ factura.total }}</p>
+    <p><b>Estado:</b> {{ factura.estado }}</p>
+
+    <h3>Paciente</h3>
+    <p><b>Documento:</b> {{ factura.paciente.documento }}</p>
+    <p><b>Nombre:</b> {{ factura.paciente.nombre }}</p>
+</body>
+</html>

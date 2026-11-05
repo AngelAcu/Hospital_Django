@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title %}Historia clínica creada{% endblock %}
+{% block migas %} / Historias clínicas / Crear{% endblock %}
+
+{% block content %}
+    <h1>Nueva historia clínica</h1>
+
+    <div class="aviso aviso-exito" role="status">
+        <div>
+            <strong>Historia clínica creada correctamente</strong>
+            <p>Se abrió la historia N.º {{ historia.id }} para {{ historia.paciente.nombre }}.</p>
+        </div>
+    </div>
+
+    {% include 'historias_clinicas/ficha.html' %}
+{% endblock %}

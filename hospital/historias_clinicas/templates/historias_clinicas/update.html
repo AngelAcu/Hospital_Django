@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title %}Historia clínica actualizada{% endblock %}
+{% block migas %} / Historias clínicas / Actualizar{% endblock %}
+
+{% block content %}
+    <h1>Editar historia clínica</h1>
+
+    <div class="aviso aviso-info" role="status">
+        <div>
+            <strong>Datos actualizados</strong>
+            <p>Los cambios en la historia N.º {{ historia.id }} se guardaron en el sistema.</p>
+        </div>
+    </div>
+
+    {% include 'historias_clinicas/ficha.html' %}
+{% endblock %}
