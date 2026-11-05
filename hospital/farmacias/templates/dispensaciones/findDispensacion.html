@@ -1,0 +1,100 @@
+
+{% extends 'base.html' %}
+
+{% block title %}Dispensaciones{% endblock %}
+{% block migas %} / Farmacias / Dispensaciones / Consultar{% endblock %}
+
+{% block content %}
+
+    <div class="cabecera">
+        <h1>Dispensaciones</h1>
+
+        <a class="boton" href="{% url 'create_dispensacion' %}">
+            Nueva dispensación
+        </a>
+    </div>
+
+    <section class="panel">
+        <h2 class="panel-titulo">
+            Listado de dispensaciones ({{ dispensaciones|length }})
+        </h2>
+
+        <div class="tabla-contenedor">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Paciente</th>
+                        <th>Profesional</th>
+                        <th>Medicamento</th>
+                        <th>Cantidad</th>
+                        <th>Precio unitario</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for dispensacion in dispensaciones %}
+                        <tr>
+                            <td>
+                                <strong>
+                                    {{ dispensacion.fecha|date:"d/m/Y H:i" }}
+                                </strong>
+                            </td>
+
+                            <td>
+                                {{ dispensacion.paciente.nombre }}
+                                <br>
+                                <small class="apagado">
+                                    {{ dispensacion.paciente.documento }}
+                                </small>
+                            </td>
+
+                            <td>
+                                {{ dispensacion.medico.nombre }}
+                                <br>
+                                <span class="rol">
+                                    {{ dispensacion.medico.rol|default:"No registrado" }}
+                                </span>
+                            </td>
+
+                            <td>
+                                {{ dispensacion.medicamento.nombre }}
+                                <br>
+                                <small class="apagado">
+                                    {{ dispensacion.medicamento.codigo }}
+                                </small>
+                            </td>
+
+                            <td>{{ dispensacion.cantidad }}</td>
+
+                            <td>
+                                ${{ dispensacion.medicamento.precio|floatformat:2 }}
+                            </td>
+
+                            <td>
+                                <a class="enlace"
+                                   href="{% url 'update_dispensacion' dispensacion.id %}">
+                                    Editar
+                                </a>
+
+                                <a class="enlace enlace-peligro"
+                                   href="{% url 'delete_dispensacion' dispensacion.id %}">
+                                    Eliminar
+                                </a>
+                            </td>
+                        </tr>
+
+                    {% empty %}
+                        <tr>
+                            <td class="vacio" colspan="7">
+                                No hay dispensaciones registradas.
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+{% endblock %}

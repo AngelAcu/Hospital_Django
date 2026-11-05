@@ -1,0 +1,271 @@
+
+{% extends 'base.html' %}
+
+{% block title %}{{ titulo }}{% endblock %}
+{% block migas %} / Farmacias / Dispensaciones / {{ titulo }}{% endblock %}
+
+{% block content %}
+    <h1>{{ titulo }}</h1>
+
+    {% if errores %}
+        <div class="aviso aviso-peligro" role="alert">
+            <div>
+                <strong>No se pudo guardar la dispensación</strong>
+                {% for mensaje in errores.general %}
+                    <p>{{ mensaje }}</p>
+                {% empty %}
+                    <p>Corrige los campos marcados e inténtalo de nuevo.</p>
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}
+
+    <form method="post" novalidate>
+        {% csrf_token %}
+
+        <!-- PACIENTE -->
+        <section class="panel">
+            <h2 class="panel-titulo">Datos del paciente</h2>
+
+            <div class="panel-cuerpo campos">
+                <div class="campo">
+                    <label for="paciente_documento">
+                        Seleccionar paciente <span class="obligatorio">*</span>
+                    </label>
+
+                    <select id="paciente_documento"
+                            name="paciente_documento"
+                            required
+                            onchange="actualizarPaciente(this)">
+
+                        <option value="">-- Seleccione un paciente --</option>
+
+                        {% for p in pacientes %}
+                            <option value="{{ p.documento }}"
+                                    data-nombre="{{ p.nombre }}"
+                                    {% if request.POST.paciente_documento|default:dispensacion.paciente.documento == p.documento %}selected{% endif %}>
+                                {{ p.nombre }} (Doc: {{ p.documento }})
+                            </option>
+                        {% endfor %}
+                    </select>
+
+                    {% for mensaje in errores.paciente_documento %}
+                        <p class="error">{{ mensaje }}</p>
+                    {% endfor %}
+                </div>
+
+                <div class="campo">
+                    <label for="paciente_nombre">Nombre completo</label>
+                    <input id="paciente_nombre"
+                           type="text"
+                           readonly
+                           value="{{ request.POST.paciente_nombre|default:dispensacion.paciente.nombre }}"
+                           style="background: var(--fondo); cursor: not-allowed;">
+                </div>
+            </div>
+        </section>
+
+        <!-- MEDICO -->
+        <section class="panel separado">
+            <h2 class="panel-titulo">Personal de salud responsable</h2>
+
+            <div class="panel-cuerpo campos">
+                <div class="campo">
+                    <label for="medico_documento">
+                        Seleccionar profesional <span class="obligatorio">*</span>
+                    </label>
+
+                    <select id="medico_documento"
+                            name="medico_documento"
+                            required
+                            onchange="actualizarMedico(this)">
+
+                        <option value="">-- Seleccione un profesional --</option>
+
+                        {% for m in personal %}
+                            <option value="{{ m.documento }}"
+                                    data-nombre="{{ m.nombre }}"
+                                    data-rol="{{ m.rol.nombre }}"
+                                    {% if request.POST.medico_documento|default:dispensacion.medico.documento == m.documento %}selected{% endif %}>
+                                [{{ m.rol.nombre }}] {{ m.nombre }}
+                            </option>
+                        {% endfor %}
+                    </select>
+
+                    {% for mensaje in errores.medico_documento %}
+                        <p class="error">{{ mensaje }}</p>
+                    {% endfor %}
+                </div>
+
+                <div class="campo">
+                    <label for="medico_nombre">Nombre del profesional</label>
+                    <input id="medico_nombre"
+                           type="text"
+                           readonly
+                           value="{{ request.POST.medico_nombre|default:dispensacion.medico.nombre }}"
+                           style="background: var(--fondo); cursor: not-allowed;">
+                </div>
+
+                <div class="campo">
+                    <label for="medico_rol">Cargo</label>
+                    <input id="medico_rol"
+                           type="text"
+                           readonly
+                           value="{{ request.POST.medico_rol|default:dispensacion.medico.rol }}"
+                           style="background: var(--fondo); cursor: not-allowed;">
+                </div>
+            </div>
+        </section>
+
+        <!-- MEDICAMENTO -->
+        <section class="panel separado">
+            <h2 class="panel-titulo">Medicamento a dispensar</h2>
+
+            <div class="panel-cuerpo campos">
+                <div class="campo">
+                    <label for="medicamento_codigo">
+                        Seleccionar medicamento <span class="obligatorio">*</span>
+                    </label>
+
+                    <select id="medicamento_codigo"
+                            name="medicamento_codigo"
+                            required
+                            onchange="actualizarMedicamento(this)">
+
+                        <option value="">-- Seleccione un medicamento --</option>
+
+                        {% for m in medicamentos %}
+                            <option value="{{ m.codigo }}"
+                                    data-nombre="{{ m.nombre }}"
+                                    data-precio="{{ m.precio }}"
+                                    data-stock="{{ m.stock }}"
+                                    {% if request.POST.medicamento_codigo|default:dispensacion.medicamento.codigo == m.codigo %}selected{% endif %}>
+                                {{ m.nombre }} ({{ m.codigo }})
+                            </option>
+                        {% endfor %}
+                    </select>
+
+                    {% for mensaje in errores.medicamento_codigo %}
+                        <p class="error">{{ mensaje }}</p>
+                    {% endfor %}
+                </div>
+
+                <div class="campo">
+                    <label for="medicamento_nombre">Nombre</label>
+                    <input id="medicamento_nombre"
+                           type="text"
+                           readonly
+                           value="{{ dispensacion.medicamento.nombre }}"
+                           style="background: var(--fondo); cursor: not-allowed;">
+                </div>
+
+                <div class="campo">
+                    <label for="medicamento_precio">Precio unitario</label>
+                    <input id="medicamento_precio"
+                           type="text"
+                           readonly
+                           value="{{ dispensacion.medicamento.precio }}"
+                           style="background: var(--fondo); cursor: not-allowed;">
+                </div>
+
+                <div class="campo">
+                    <label for="medicamento_stock">Stock disponible</label>
+                    <input id="medicamento_stock"
+                           type="text"
+                           readonly
+                           style="background: var(--fondo); cursor: not-allowed;">
+                </div>
+            </div>
+        </section>
+
+        <!-- DATOS DE DISPENSACION -->
+        <section class="panel separado">
+            <h2 class="panel-titulo">Datos de la dispensación</h2>
+
+            <div class="panel-cuerpo campos">
+                <div class="campo">
+                    <label for="cantidad">
+                        Cantidad <span class="obligatorio">*</span>
+                    </label>
+
+                    <input id="cantidad"
+                           name="cantidad"
+                           type="number"
+                           min="1"
+                           required
+                           value="{{ request.POST.cantidad|default:dispensacion.cantidad }}">
+
+                    {% for mensaje in errores.cantidad %}
+                        <p class="error">{{ mensaje }}</p>
+                    {% endfor %}
+                </div>
+
+                <div class="campo campo-ancho">
+                    <label for="observacion">Observaciones</label>
+
+                    <textarea id="observacion"
+                              name="observacion"
+                              rows="4">{{ request.POST.observacion|default:dispensacion.observacion }}</textarea>
+                </div>
+            </div>
+        </section>
+
+        <div class="acciones">
+            <button class="boton" type="submit">
+                Guardar dispensación
+            </button>
+
+            <a class="boton boton-secundario"
+               href="{% url 'find_dispensacion' %}">
+                Cancelar
+            </a>
+        </div>
+    </form>
+
+    <script>
+        function actualizarPaciente(select) {
+            const opcion = select.options[select.selectedIndex];
+
+            document.getElementById('paciente_nombre').value =
+                opcion.value ? opcion.dataset.nombre || '' : '';
+        }
+
+        function actualizarMedico(select) {
+            const opcion = select.options[select.selectedIndex];
+
+            document.getElementById('medico_nombre').value =
+                opcion.value ? opcion.dataset.nombre || '' : '';
+
+            document.getElementById('medico_rol').value =
+                opcion.value ? opcion.dataset.rol || '' : '';
+        }
+
+        function actualizarMedicamento(select) {
+            const opcion = select.options[select.selectedIndex];
+
+            document.getElementById('medicamento_nombre').value =
+                opcion.value ? opcion.dataset.nombre || '' : '';
+
+            document.getElementById('medicamento_precio').value =
+                opcion.value ? opcion.dataset.precio || '' : '';
+
+            document.getElementById('medicamento_stock').value =
+                opcion.value ? opcion.dataset.stock || '0' : '';
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            actualizarPaciente(
+                document.getElementById('paciente_documento')
+            );
+
+            actualizarMedico(
+                document.getElementById('medico_documento')
+            );
+
+            actualizarMedicamento(
+                document.getElementById('medicamento_codigo')
+            );
+        });
+    </script>
+
+{% endblock %}

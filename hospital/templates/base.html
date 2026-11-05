@@ -29,6 +29,7 @@
                     <a href="{% url 'find_usuario' %}">Usuarios</a>
                     <a href="{% url 'find_cita' %}">Citas</a>
                     <a href="{% url 'find_medicamento' %}">Medicamentos</a>
+                    <a href="{% url 'find_dispensacion' %}">Dispensaciones</a>
                 </nav>
                 <form class="sesion" method="post" action="{% url 'logout_usuario' %}">
                     {% csrf_token %}

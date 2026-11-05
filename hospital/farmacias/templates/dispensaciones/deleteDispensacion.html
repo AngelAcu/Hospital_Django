@@ -1,0 +1,96 @@
+
+{% extends 'base.html' %}
+
+{% block title %}Eliminar dispensación{% endblock %}
+{% block migas %} / Farmacias / Dispensaciones / Eliminar{% endblock %}
+
+{% block content %}
+
+    <h1>Eliminar dispensación</h1>
+
+    {% if confirmar %}
+
+        <div class="aviso aviso-peligro" role="alert">
+            <div>
+                <strong>¿Deseas eliminar esta dispensación?</strong>
+
+                <p>
+                    {{ dispensacion.medicamento.nombre }}
+                    · {{ dispensacion.paciente.nombre }}
+                    · Cantidad: {{ dispensacion.cantidad }}
+                </p>
+
+                <p>
+                    Al eliminarla, las unidades dispensadas
+                    serán devueltas al inventario.
+                </p>
+            </div>
+        </div>
+
+        <section class="panel">
+            <h2 class="panel-titulo">Detalles de la dispensación</h2>
+
+            <div class="panel-cuerpo">
+                <dl class="ficha">
+
+                    <dt>Paciente</dt>
+                    <dd>{{ dispensacion.paciente.nombre }}</dd>
+
+                    <dt>Documento</dt>
+                    <dd>{{ dispensacion.paciente.documento }}</dd>
+
+                    <dt>Profesional</dt>
+                    <dd>{{ dispensacion.medico.nombre|default:"No registrado" }}</dd>
+
+                    <dt>Medicamento</dt>
+                    <dd>{{ dispensacion.medicamento.nombre }}</dd>
+
+                    <dt>Código</dt>
+                    <dd>{{ dispensacion.medicamento.codigo }}</dd>
+
+                    <dt>Cantidad dispensada</dt>
+                    <dd>{{ dispensacion.cantidad }}</dd>
+
+                    <dt>Fecha</dt>
+                    <dd>{{ dispensacion.fecha|date:"d/m/Y H:i" }}</dd>
+
+                </dl>
+            </div>
+        </section>
+
+        <form method="post" class="acciones">
+            {% csrf_token %}
+
+            <button class="boton boton-peligro" type="submit">
+                Sí, eliminar dispensación
+            </button>
+
+            <a class="boton boton-secundario"
+               href="{% url 'find_dispensacion' %}">
+                Volver
+            </a>
+        </form>
+
+    {% else %}
+
+        <div class="aviso aviso-info" role="status">
+            <div>
+                <strong>Dispensación eliminada correctamente</strong>
+
+                <p>
+                    La dispensación de
+                    {{ dispensacion.paciente.nombre }}
+                    fue eliminada y el inventario fue actualizado.
+                </p>
+            </div>
+        </div>
+
+        <div class="acciones">
+            <a class="boton" href="{% url 'find_dispensacion' %}">
+                Volver al listado
+            </a>
+        </div>
+
+    {% endif %}
+
+{% endblock %}

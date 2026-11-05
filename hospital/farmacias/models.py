@@ -6,6 +6,14 @@ class PacienteDispensacion(models.Model):
 
     class Meta:
         abstract = True
+        
+class MedicoDispensacion(models.Model):
+    documento = models.CharField(max_length=15)
+    nombre = models.CharField(max_length=200)
+    rol = models.CharField(max_length=100)
+
+    class Meta:
+        abstract = True
 
 class MedicamentoDispensacion(models.Model):
     codigo = models.CharField(max_length=50)
@@ -22,6 +30,11 @@ class Dispensacion(models.Model):
     observacion = models.TextField(blank=True, null=True)
     paciente = models.EmbeddedField(model_container=PacienteDispensacion)
     medicamento = models.EmbeddedField(model_container=MedicamentoDispensacion)
+    medico = models.EmbeddedField(model_container=MedicoDispensacion)
+    
+    @property
+    def id(self):
+        return str(self._id)
     
 class Medicamento(models.Model):
     _id = models.ObjectIdField()

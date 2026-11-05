@@ -1,0 +1,74 @@
+
+{% extends 'base.html' %}
+
+{% block title %}Dispensación creada{% endblock %}
+{% block migas %} / Farmacias / Dispensaciones / Crear{% endblock %}
+
+{% block content %}
+    <h1>Nueva dispensación</h1>
+
+    <div class="aviso aviso-exito" role="status">
+        <div>
+            <strong>La dispensación se registró correctamente</strong>
+            <p>
+                Se dispensaron {{ dispensacion.cantidad }} unidades
+                de {{ dispensacion.medicamento.nombre }}
+                para {{ dispensacion.paciente.nombre }}.
+            </p>
+        </div>
+    </div>
+
+    <section class="panel">
+        <h2 class="panel-titulo">Resumen de la dispensación</h2>
+
+        <div class="panel-cuerpo">
+            <dl class="ficha">
+                <dt>Fecha</dt>
+                <dd>{{ dispensacion.fecha|date:"d/m/Y H:i" }}</dd>
+
+                <dt>Paciente</dt>
+                <dd>
+                    {{ dispensacion.paciente.nombre }}
+                    ({{ dispensacion.paciente.documento }})
+                </dd>
+
+                <dt>Profesional responsable</dt>
+                <dd>
+                    {{ dispensacion.medico.nombre }}
+                    ({{ dispensacion.medico.rol }})
+                </dd>
+
+                <dt>Medicamento</dt>
+                <dd>
+                    {{ dispensacion.medicamento.nombre }}
+                    ({{ dispensacion.medicamento.codigo }})
+                </dd>
+
+                <dt>Precio unitario</dt>
+                <dd>${{ dispensacion.medicamento.precio|floatformat:2 }}</dd>
+
+                <dt>Cantidad</dt>
+                <dd>{{ dispensacion.cantidad }}</dd>
+
+                <dt>Total</dt>
+                <dd>
+                    ${% widthratio dispensacion.medicamento.precio 1 dispensacion.cantidad %}
+                </dd>
+
+                <dt>Observación</dt>
+                <dd>{{ dispensacion.observacion|default:"Sin observaciones" }}</dd>
+            </dl>
+
+            <div class="acciones">
+                <a class="boton" href="{% url 'find_dispensacion' %}">
+                    Ver dispensaciones
+                </a>
+
+                <a class="boton boton-secundario"
+                   href="{% url 'create_dispensacion' %}">
+                    Registrar otra
+                </a>
+            </div>
+        </div>
+    </section>
+{% endblock %}

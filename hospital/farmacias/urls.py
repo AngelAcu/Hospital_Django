@@ -7,4 +7,10 @@ urlpatterns = [
     path('medicamentos/find/', views.find_medicamento, name='find_medicamento'),
     path('medicamentos/update/<str:id>/', views.update_medicamento, name='update_medicamento'),
     path('medicamentos/delete/<str:id>/', views.delete_medicamento, name='delete_medicamento'),
+    
+    path('dispensaciones/', views.inicio_dispensacion, name='inicio_dispensacion'),
+    path('dispensaciones/create/', views.create_dispensacion, name='create_dispensacion'),
+    path('dispensaciones/find/', views.find_dispensacion, name='find_dispensacion'),
+    path('dispensaciones/update/<str:id>/', views.update_dispensacion, name='update_dispensacion'),
+    path('dispensaciones/delete/<str:id>/', views.delete_dispensacion, name='delete_dispensacion'),
 ]
