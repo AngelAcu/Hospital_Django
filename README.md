@@ -6,4 +6,5 @@ paso a paso para correr el proyecto:
 4. pip install legacy-cgi
 5. pip install setuptools
 6. cd hospital
-7. python manage.py runserver
+7. python manage.py migrate
+8. python manage.py runserver
